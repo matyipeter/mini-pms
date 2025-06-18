@@ -51,5 +51,9 @@ The project is organized into the following Django apps:
 
 1. Clone the repository:
    ```sh
-   git clone <repository-url>
-   cd <repository-folder>
+   git clone https://github.com/matyipeter/mini-pms.git
+   cd mini-pms
+
+2. Install dependencies:
+    ```sh
+    pip install -r requirements.txt

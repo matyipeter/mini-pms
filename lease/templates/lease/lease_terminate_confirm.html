@@ -1,0 +1,23 @@
+{% extends "users/base.html" %}
+{% block content %}
+<div class="max-w-xl mx-auto mt-10 bg-white p-6 rounded shadow">
+    <h2 class="text-2xl font-bold text-red-600 mb-6">Confirm Lease Termination</h2>
+    <p class="mb-4 text-gray-700">
+        Are you sure you want to terminate this lease for <strong>{{ lease.tenant }}</strong> at 
+        <strong>{{ lease.property.name }}</strong>?
+    </p>
+
+    <form method="post" action="{% url 'lease:terminate_lease' lease.pk %}">
+        {% csrf_token %}
+        <div class="flex  space-x-4">
+            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500">
+                Yes, Terminate
+            </button>
+            <a href="{% url 'lease:lease_detail' lease.pk %}" 
+               class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

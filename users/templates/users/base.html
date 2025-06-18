@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}PMS{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'output.css' %}">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+  <!-- Navbar -->
+  <header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <!-- Logo -->
+      <a href="/" class="text-2xl font-bold text-indigo-600">PMS</a>
+  
+      <!-- Hamburger for mobile -->
+      <button class="md:hidden text-gray-600 focus:outline-none" id="mobile-menu-button">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+  
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex items-center space-x-4">
+        {% if user.is_authenticated %}
+          <span class="text-gray-600 text-sm">Hello, {{ user.username }}</span>
+  
+          {% if user.is_owner %}
+            <a href="{% url 'properties:owner_dashboard' %}"
+               class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500 text-sm">
+              Owner Dashboard
+            </a>
+          {% else %}
+            <a href="{% url 'properties:tenant_dashboard' %}"
+               class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500 text-sm">
+              Tenant Dashboard
+            </a>
+          {% endif %}
+  
+          <form method="post" action="{% url 'users:logout' %}" class="inline">
+            {% csrf_token %}
+            <button type="submit"
+                    class="text-sm text-indigo-600 hover:text-indigo-500 bg-transparent border-none p-0 m-0 cursor-pointer">
+              Logout
+            </button>
+          </form>
+        {% else %}
+          <a href="{% url 'users:login' %}" class="text-sm text-gray-700 hover:text-indigo-600">Login</a>
+          <a href="{% url 'users:register' %}"
+             class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500 text-sm">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  
+    <!-- Mobile Menu (animated height transition) -->
+    <div id="mobile-menu"
+         class="md:hidden overflow-hidden transition-all duration-300 ease-in-out max-h-0 px-4"
+         style="will-change: max-height;">
+      <div class="pb-4 space-y-2">
+        {% if user.is_authenticated %}
+          <p class="text-gray-600 text-sm pt-2">Hello, {{ user.username }}</p>
+  
+          {% if user.is_owner %}
+            <a href="{% url 'properties:owner_dashboard' %}"
+               class="block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500 text-sm">
+              Owner Dashboard
+            </a>
+          {% else %}
+            <a href="{% url 'properties:tenant_dashboard' %}"
+               class="block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500 text-sm">
+              Tenant Dashboard
+            </a>
+          {% endif %}
+  
+          <form method="post" action="{% url 'users:logout' %}">
+            {% csrf_token %}
+            <button type="submit"
+                    class="block w-full text-left text-sm text-indigo-600 hover:text-indigo-500 mt-2">
+              Logout
+            </button>
+          </form>
+        {% else %}
+          <a href="{% url 'users:login' %}" class="block text-sm text-gray-700 hover:text-indigo-600">Login</a>
+          <a href="{% url 'users:register' %}"
+             class="block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500 text-sm">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  
+    <!-- Toggle Script -->
+    <script>
+      const menuBtn = document.getElementById("mobile-menu-button");
+      const menu = document.getElementById("mobile-menu");
+  
+      let isOpen = false;
+  
+      menuBtn.addEventListener("click", () => {
+        isOpen = !isOpen;
+        if (isOpen) {
+          menu.classList.remove("max-h-0");
+          menu.classList.add("max-h-96");
+        } else {
+          menu.classList.remove("max-h-96");
+          menu.classList.add("max-h-0");
+        }
+      });
+    </script>
+  </header>
+  
+  
+
+  
+      {% block content %}
+      {% endblock %}
+
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 py-6 text-center text-sm text-gray-500">
+    &copy; {{ year|default:"2025" }} Property Management System. All rights reserved.
+  </footer>
+
+</body>
+</html>

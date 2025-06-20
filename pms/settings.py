@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'properties',
     'lease',
     'maintenance',
+    'reports',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

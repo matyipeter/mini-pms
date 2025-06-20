@@ -27,6 +27,7 @@ class Property(models.Model):
         ]
     )
 
+
     # leases[]
     # maintanacerequests[]
 
@@ -40,15 +41,15 @@ class Property(models.Model):
         self.save()
 
     def get_current_lease(self):
-        if self.leases.exists():
-            return self.leases.first()
+        if self.lease.exists():
+            return self.lease.first()
         return None
     
     def get_lease_history(self):
-        return self.leases.all()
+        return self.lease.all()
 
     def get_lease(self, lease_id):
-        return self.leases.get(id=lease_id)
+        return self.lease.get(id=lease_id)
 
     def add_maintenance_request(self, request):
         self.maintanacerequests.add(request)

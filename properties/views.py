@@ -3,7 +3,7 @@ from .forms import PropertyCreateForm
 from django.contrib.auth.decorators import login_required
 from .models import Property
 from django.views.generic.edit import CreateView, FormView, DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
@@ -14,7 +14,6 @@ from django.core.exceptions import PermissionDenied
 
 class UpdatePropertyView(LoginRequiredMixin, FormView):
     form_class = PropertyCreateForm
-    success_url = reverse_lazy('properties:success')
     template_name = 'properties/owner/update_property_form.html'
 
     def dispatch(self, request, *args, **kwargs):
@@ -37,6 +36,9 @@ class UpdatePropertyView(LoginRequiredMixin, FormView):
         # At this point, self.property is always the right property with the right owner
         self.owner.update_property(self.property.id, **form.cleaned_data)
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse("properties:property_detail", kwargs={"pk": self.property.id})
 
 class SuccessView(LoginRequiredMixin, TemplateView):
     template_name = 'properties/success.html'
@@ -67,7 +69,7 @@ class TenantDashboardView(LoginRequiredMixin, TemplateView):
 
 class PropertyDetailView(LoginRequiredMixin, DetailView):
     model = Property
-    template_name = 'properties/owner/property_detail.html'
+    template_name = 'properties/property_detail.html'
     context_object_name = 'property'
 
     def get_context_data(self, **kwargs):

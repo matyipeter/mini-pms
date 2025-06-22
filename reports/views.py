@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from users.models import OwnerProfile
 from .models import Report 
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 
 # Create your views here.
 
@@ -44,8 +44,38 @@ class ReportCreateView(View):
             if lease != None and lease.is_active:
                 income += lease.rent_amount
         return income
-    
 
+
+class ReportListView(ListView):
+    model = Report
+    template_name = "reports/report_list.html"
+    context_object_name = "reports"
+
+    def get_queryset(self):
+        user = self.request.user
+        owner = get_object_or_404(OwnerProfile, user=user)
+        return Report.objects.filter(owner=owner).order_by('-created_at')
+
+
+def report_download(request, pk):
+    report = get_object_or_404(Report, pk=pk)
+    
+    # Here you would implement the logic to generate a downloadable report file
+    # For simplicity, we will just return a simple text response
+    # PDF creating will be added using WeasyPrint
+    response = HttpResponse(
+        f"Report for {report.owner.user.username} - {report.created_at.strftime('%Y-%m-%d')}\n"
+        f"Number of Properties: {report.number_of_properties}\n"
+        f"Number of Tenants: {report.number_of_tenants}\n"
+        f"Monthly Income: {report.monthly_income}\n"
+        f"Monthly Expenses: {report.monthly_expenses}\n"
+        f"Available Properties: {report.available_properties}\n"
+        f"Occupied Properties: {report.occupied_properties}",
+        content_type='text/plain'
+    )
+    response['Content-Disposition'] = f'attachment; filename="report_{pk}.txt"'
+    
+    return response
 
 
 

@@ -11,6 +11,10 @@ from django.http import HttpResponseRedirect, HttpResponse
 
 class ReportCreateView(View):
 
+    """View to create a new report for the owner.
+        The button will return to the ReportListView after creating the report.
+    """
+
     def post(self, request):
         user = request.user
         owner = get_object_or_404(OwnerProfile, user=user)
@@ -27,7 +31,7 @@ class ReportCreateView(View):
 
         report.save()
 
-        return HttpResponseRedirect(reverse("properties:owner_dashboard"))
+        return HttpResponseRedirect(reverse("reports:report_list"))
 
     def calc_tenants(self, owner):
         count = 0

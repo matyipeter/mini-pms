@@ -16,7 +16,7 @@ class Lease(models.Model):
     
     def set_active(self):
         self.is_active = True
-        self.property.occupancy_status = 'Occupied'
+        self.property.occupancy_status = 'occupied'
         self.property.save()
     
     def calculate_remaining_days(self):

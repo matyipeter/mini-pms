@@ -18,9 +18,9 @@
             </div>
             <div class="flex gap-3">
                 <a href="{% url 'properties:add_property' %}" class="inline-block bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-500">Add New Property</a>
-                <form method="post" action="{% url 'reports:report_create' %}">
+                <form method="post" class="cursor-pointer" action="{% url 'reports:report_create' %}">
                     {% csrf_token %}
-                    <button type="submit" class="inline-block bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500">
+                    <button type="submit" class="cursor-pointer inline-block bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500">
                         Create Report
                     </button>
                 </form>

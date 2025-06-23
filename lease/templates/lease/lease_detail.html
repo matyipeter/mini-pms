@@ -5,24 +5,40 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-            <p><span class="font-semibold">Start Date:</span> {{ lease.start_date }}</p>
-            <p><span class="font-semibold">End Date:</span> {{ lease.end_date }}</p>
-            <p><span class="font-semibold">Rent:</span> ${{ lease.rent_amount }}</p>
+            <p><span class="font-semibold">Start Date:</span> {{ lease.start_date|date:"F j, Y" }}</p>
+            <p><span class="font-semibold">End Date:</span> {{ lease.end_date|date:"F j, Y" }}</p>
+            <p><span class="font-semibold">Rent Amount:</span> <span class="text-green-700 font-bold">${{ lease.rent_amount }}</span></p>
         </div>
         <div>
             <p><span class="font-semibold">Tenant:</span> {{ lease.tenant }}</p>
             <p><span class="font-semibold">Property:</span> {{ lease.property }}</p>
         </div>
         <div>
-            <p><span class="font-semibold">Status:</span> {% if lease.is_active %}
-                Active
-                <a href="{% url 'lease:lease_terminate_confirm' lease.pk %}"
-                    class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500 transition text-sm">
-                    Terminate Lease
-                </a>    
-            {% else %}
-                Inactive
-            {% endif %}</p>
+            <p>
+                <span class="font-semibold">Status:</span>
+                {% if lease.is_active %}
+                    <span class="inline-block px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-800">Active</span>
+                    <a href="{% url 'lease:lease_terminate_confirm' lease.pk %}"
+                        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500 transition text-sm ml-2">
+                        Terminate Lease
+                    </a>
+                {% else %}
+                    <span class="inline-block px-2 py-1 text-xs font-semibold rounded bg-gray-200 text-gray-800">Inactive</span>
+                {% endif %}
+            </p>
+        </div>
+        <div>
+            <p>
+                <span class="font-semibold">Payment Status:</span>
+                {% if lease.paid %}
+                    <span class="inline-block px-2 py-1 text-xs font-semibold rounded bg-green-200 text-green-800">Paid</span>
+                    {% if lease.paid_at %}
+                        <span class="ml-2 text-gray-600">on {{ lease.paid_at|date:"F j, Y, g:i a" }}</span>
+                    {% endif %}
+                {% else %}
+                    <span class="inline-block px-2 py-1 text-xs font-semibold rounded bg-red-200 text-red-800">Unpaid</span>
+                {% endif %}
+            </p>
         </div>
     </div>
 

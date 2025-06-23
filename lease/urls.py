@@ -9,4 +9,5 @@ urlpatterns = [
     path('terminate/<int:pk>/', views.TerminateLeaseView.as_view(), name='terminate_lease'),
     path("terminate/confirm/<int:pk>", views.LeaseTerminateConfirmView.as_view(), name="lease_terminate_confirm"),
     path("tenant/<int:pk>/", views.TenantLeaseDetailView.as_view(), name="tenant_lease_detail"),
+    path("tenant/<int:pk>/pay/", views.PayRentView.as_view(), name="tenant_pay"),
 ]

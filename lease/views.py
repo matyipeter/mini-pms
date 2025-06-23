@@ -76,4 +76,21 @@ class TenantLeaseDetailView(DetailView):
         # Only allow access to the tenant's own lease
         tenant = get_object_or_404(TenantProfile, user=self.request.user)
         return Lease.objects.filter(tenant=tenant)
+
+
+class PayRentView(View):
     
+    def post(self, request, pk):
+
+        lease = get_object_or_404(Lease, pk=pk)
+        tenant = get_object_or_404(TenantProfile, user=request.user)
+
+        # proof of transaction can be added here if needed (later)
+
+        if lease.tenant != tenant:
+            return redirect(reverse("lease:tenant_lease_detail", kwargs={"pk": lease.pk}))
+
+        # Assuming the payment logic is implemented in the Lease model
+        lease.pay_rent()
+        
+        return redirect(reverse("lease:tenant_lease_detail", kwargs={"pk": lease.pk}))

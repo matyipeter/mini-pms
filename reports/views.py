@@ -6,6 +6,9 @@ from users.models import OwnerProfile
 from .models import Report 
 from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse
+from weasyprint import HTML
+from django.template.loader import render_to_string
+
 
 # Create your views here.
 
@@ -63,23 +66,28 @@ class ReportListView(ListView):
 
 
 def report_download(request, pk):
+    
+    # 1. Getting all data
     report = get_object_or_404(Report, pk=pk)
-    
-    # Here you would implement the logic to generate a downloadable report file
-    # For simplicity, we will just return a simple text response
-    # PDF creating will be added using WeasyPrint
-    response = HttpResponse(
-        f"Report for {report.owner.user.username} - {report.created_at.strftime('%Y-%m-%d')}\n"
-        f"Number of Properties: {report.number_of_properties}\n"
-        f"Number of Tenants: {report.number_of_tenants}\n"
-        f"Monthly Income: {report.monthly_income}\n"
-        f"Monthly Expenses: {report.monthly_expenses}\n"
-        f"Available Properties: {report.available_properties}\n"
-        f"Occupied Properties: {report.occupied_properties}",
-        content_type='text/plain'
+
+    # 2. Render HTML
+
+    html_string = render_to_string(
+        'reports/report_pdf.html',
+        {
+            'report': report,
+        }
     )
-    response['Content-Disposition'] = f'attachment; filename="report_{pk}.txt"'
-    
+
+    # 3. Generate PDF from HTML
+
+    html = HTML(string=html_string)
+    pdf_file = html.write_pdf()
+
+    # 4. Create HTTP response with PDF file
+
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="lease_report_id{report.pk}.pdf"'
     return response
 
 

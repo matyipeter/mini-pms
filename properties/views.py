@@ -11,6 +11,7 @@ from users.models import OwnerProfile, TenantProfile
 from datetime import date
 from lease.models import Lease
 from django.core.exceptions import PermissionDenied
+from maintenance.models import MaintenanceRequest
 
 class UpdatePropertyView(LoginRequiredMixin, FormView):
     form_class = PropertyCreateForm
@@ -77,7 +78,14 @@ class PropertyDetailView(LoginRequiredMixin, DetailView):
         current_lease = Lease.objects.filter(
             property=self.object,
         ).first()
+
+        maintenance_requests = MaintenanceRequest.objects.filter(
+            property=self.object,
+            status='pending'
+        )
+
         context["current_lease"] = current_lease
+        context["maintenance"] = maintenance_requests
         return context
 
 class CreatePropertyView(LoginRequiredMixin, CreateView):

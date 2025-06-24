@@ -11,8 +11,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 
 class ReportCreateView(View):
 
-    """View to create a new report for the owner.
-        The button will return to the ReportListView after creating the report.
+    """
+    View to create a new report for the owner.
+    The button will return to the ReportListView after creating the report.
     """
 
     def post(self, request):
